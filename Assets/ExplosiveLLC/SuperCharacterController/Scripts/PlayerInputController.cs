@@ -3,12 +3,12 @@ using System.Collections;
 
 public class PlayerInputController : MonoBehaviour {
 
-    public PlayerInput Current;
+    public PlayerInput2 Current;
     public Vector2 RightStickMultiplier = new Vector2(3, -1.5f);
 
 	// Use this for initialization
 	void Start () {
-        Current = new PlayerInput();
+        Current = new PlayerInput2();
 	}
 
 	void Update () {
@@ -28,7 +28,7 @@ public class PlayerInputController : MonoBehaviour {
 
         bool jumpInput = Input.GetButtonDown("Jump");
 
-        Current = new PlayerInput()
+        Current = new PlayerInput2()
         {
             MoveInput = moveInput,
             MouseInput = mouseInput,
@@ -37,7 +37,7 @@ public class PlayerInputController : MonoBehaviour {
 	}
 }
 
-public struct PlayerInput
+public struct PlayerInput2
 {
     public Vector3 MoveInput;
     public Vector2 MouseInput;

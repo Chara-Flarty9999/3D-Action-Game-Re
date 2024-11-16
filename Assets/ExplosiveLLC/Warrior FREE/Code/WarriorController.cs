@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using StarterAssets;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 namespace WarriorAnimsFREE
 {
@@ -31,8 +34,10 @@ namespace WarriorAnimsFREE
 		public bool allowedInput { get { return _allowedInput; } }
 		private bool _allowedInput = true;
 
-		// Actions.
-		[HideInInspector] public bool isMoving;
+        private StarterAssetsInputs _input;
+
+        // Actions.
+        [HideInInspector] public bool isMoving;
 		[HideInInspector] public bool useRootMotion = false;
 
 		public bool canAction { get { return _canAction; } }
@@ -47,12 +52,14 @@ namespace WarriorAnimsFREE
 		// Animation speed control. (doesn't affect lock timing)
 		public float animationSpeed = 1;
 
-		#region Initialization
 
-		private void Awake()
+        #region Initialization
+
+        private void Awake()
 		{
-			// Get SuperCharacterController.
-			superCharacterController = GetComponent<SuperCharacterController>();
+
+            // Get SuperCharacterController.
+            superCharacterController = GetComponent<SuperCharacterController>();
 
 			// Get Movement Controller.
 			warriorMovementController = GetComponent<WarriorMovementController>();
@@ -61,8 +68,10 @@ namespace WarriorAnimsFREE
 			warriorTiming = gameObject.AddComponent<WarriorTiming>();
 			warriorTiming.warriorController = this;
 
-			// Add IKHands.
-			ikHands = GetComponentInChildren<IKHands>();
+            _input = GetComponent<StarterAssetsInputs>();
+
+            // Add IKHands.
+            ikHands = GetComponentInChildren<IKHands>();
 			if (ikHands != null) {
 				if (warrior == Warrior.TwoHanded
 					|| warrior == Warrior.Hammer
@@ -380,6 +389,8 @@ namespace WarriorAnimsFREE
 			Debug.Log("Velocity: " + animator.GetFloat("Velocity"));
 		}
 
-		#endregion
-	}
+        #endregion
+    }
+
+
 }
