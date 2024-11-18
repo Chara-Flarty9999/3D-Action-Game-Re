@@ -15,7 +15,7 @@ public class CameraControll : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+/*    // Update is called once per frame
     void Update()
     {
         // Debug.Log(Input.GetAxis(ÅgMouse XÅh));
@@ -26,6 +26,6 @@ public class CameraControll : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(ver, side, 0f);
 
-    }
+    }*/
 }
 

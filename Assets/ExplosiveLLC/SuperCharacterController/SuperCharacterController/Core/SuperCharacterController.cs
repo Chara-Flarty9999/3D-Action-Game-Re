@@ -110,7 +110,7 @@ public class SuperCharacterController : MonoBehaviour
     private const float TinyTolerance = 0.01f;
     private const string TemporaryLayer = "TempCast";
     private const int MaxPushbackIterations = 2;
-    private int TemporaryLayerIndex;
+    private int TemporaryLayerIndex = 1;
     private float fixedDeltaTime;
 
     private static SuperCollisionType defaultCollisionType;
@@ -160,6 +160,7 @@ public class SuperCharacterController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(TemporaryLayerIndex);
         // If we are using a fixed timestep, ensure we run the main update loop
         // a sufficient number of times based on the Time.deltaTime
         if (manualUpdateOnly)
