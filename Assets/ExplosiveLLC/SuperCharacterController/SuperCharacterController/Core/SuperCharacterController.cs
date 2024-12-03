@@ -108,7 +108,7 @@ public class SuperCharacterController : MonoBehaviour
 
     private const float Tolerance = 0.05f;
     private const float TinyTolerance = 0.01f;
-    private const string TemporaryLayer = "TempCast";
+    private const string TemporaryLayer = "Player";
     private const int MaxPushbackIterations = 2;
     private int TemporaryLayerIndex = 1;
     private float fixedDeltaTime;
