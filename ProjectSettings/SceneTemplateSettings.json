@@ -110,12 +110,22 @@
             "userAdded": false,
             "type": "UnityEngine.Timeline.TimelineAsset",
             "defaultInstantiationMode": 0
+        },
+        {
+            "userAdded": true,
+            "type": "UnityEditor.Rendering.HighDefinition.AssetVersion",
+            "defaultInstantiationMode": 0
+        },
+        {
+            "userAdded": true,
+            "type": "UnityEditor.Rendering.HighDefinition.HDReflectionProbeEditor",
+            "defaultInstantiationMode": 0
         }
     ],
     "defaultDependencyTypeInfo": {
         "userAdded": false,
         "type": "<default_scene_template_dependencies>",
-        "defaultInstantiationMode": 1
+        "defaultInstantiationMode": 0
     },
-    "newSceneOverride": 0
+    "newSceneOverride": 1
 }

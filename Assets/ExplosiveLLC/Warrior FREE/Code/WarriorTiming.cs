@@ -47,6 +47,7 @@ namespace WarriorAnimsFREE
 			else if(warrior == Warrior.Sorceress)
 			{
 				if(action == "attack1") timing = 1.2f;
+				if(action == "damage") timing = 0.3f;
 			}
 			else if(warrior == Warrior.Spearman)
 			{

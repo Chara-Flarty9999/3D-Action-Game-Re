@@ -37,6 +37,7 @@
 	public enum AnimatorTrigger
 	{
 		JumpTrigger = 1,
-		AttackTrigger = 2
+		AttackTrigger = 2,
+		DamageTrigger = 3,
 	}
 }

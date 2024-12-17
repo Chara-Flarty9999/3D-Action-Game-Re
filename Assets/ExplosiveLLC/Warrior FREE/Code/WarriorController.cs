@@ -1,5 +1,7 @@
 ﻿using StarterAssets;
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
@@ -39,6 +41,7 @@ namespace WarriorAnimsFREE
         // Actions.
         [HideInInspector] public bool isMoving;
 		[HideInInspector] public bool useRootMotion = false;
+		[HideInInspector] public Func<bool> isKnockback;
 
 		public bool canAction { get { return _canAction; } }
 		private bool _canAction = true;
@@ -221,7 +224,17 @@ namespace WarriorAnimsFREE
 			SetAnimatorInt("Action", 1);
 			SetAnimatorTrigger(AnimatorTrigger.AttackTrigger);
 			Lock(true, true, true, 0, warriorTiming.TimingLock(warrior, "attack1"));
+
 		}
+
+		private void CriticalDamage()
+		{
+            SetAnimatorInt("Jumping", 1);
+            SetAnimatorTrigger(AnimatorTrigger.DamageTrigger);
+			Lock(true, true, true, 0, warriorTiming.TimingLock(warrior,"crit_damage"));
+		}
+
+
 
 		#endregion
 
@@ -241,8 +254,14 @@ namespace WarriorAnimsFREE
 			StartCoroutine(_Lock(lockMovement, lockAction, timed, delayTime, lockTime));
 		}
 
-		//Timed -1 = infinite, 0 = no, 1 = yes.
-		public IEnumerator _Lock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime)
+        public void DamageLock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime)
+        {
+            StopCoroutine("_DamageLock");
+            StartCoroutine(_DamageLock(lockMovement, lockAction, timed, delayTime, lockTime));
+        }
+
+        //Timed -1 = infinite, 0 = no, 1 = yes.
+        public IEnumerator _Lock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime)
 		{
 			if (delayTime > 0) { yield return new WaitForSeconds(delayTime); }
 			if (lockMovement) { LockMove(true); }
@@ -255,10 +274,25 @@ namespace WarriorAnimsFREE
 			}
 		}
 
-		/// <summary>
-		/// Keep character from moving and use or diable Rootmotion.
-		/// </summary>
-		public void LockMove(bool b)
+        public IEnumerator _DamageLock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime)
+        {
+            if (delayTime > 0) { yield return new WaitForSeconds(delayTime); }
+            if (lockMovement) { LockMove(true); }
+            if (lockAction) { LockAction(true); }
+            if (timed)
+            {
+                if (lockTime > 0)
+                {
+                    yield return new WaitWhile(MaintainingGround);
+                    UnLock(lockMovement, lockAction);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Keep character from moving and use or diable Rootmotion.
+        /// </summary>
+        public void LockMove(bool b)
 		{
 			if (b) {
 				SetAnimatorBool("Moving", false);

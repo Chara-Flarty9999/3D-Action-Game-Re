@@ -28,6 +28,11 @@ namespace WarriorAnimsFREE
 			}
 		}
 
+		private void CriticalDamage()
+		{
+			if (GUI.Button(new Rect(25, 135, 100, 30), "Critical")) { }
+		}
+
 		private void Jumping()
 		{
 			if (warriorController.canJump

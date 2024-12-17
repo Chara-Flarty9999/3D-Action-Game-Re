@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Collide
   - CinemachineTarget
+  - PostVolume
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - Player
   - Water
   - UI
-  - 2
+  - PostProcess
   - 3
   - 4
   - 5
