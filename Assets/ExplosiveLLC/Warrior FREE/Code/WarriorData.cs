@@ -28,7 +28,10 @@
 		Idle = 0,
 		Move = 1,
 		Jump = 2,
-		Fall = 3
+		Fall = 3,
+		Explode_Damage = 4,
+		ExplodeFall = 5,
+		ExplodeLand = 6,
 	}
 
 	/// <summary>
@@ -39,5 +42,6 @@
 		JumpTrigger = 1,
 		AttackTrigger = 2,
 		DamageTrigger = 3,
+		CriticalDamageTrigger = 4,
 	}
 }

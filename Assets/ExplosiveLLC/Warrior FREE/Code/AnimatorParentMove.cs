@@ -15,8 +15,8 @@ namespace WarriorAnimsFREE
 		void OnAnimatorMove()
 		{
 			if(warriorController.useRootMotion) {
-				transform.parent.rotation = animator.rootRotation;
-				transform.parent.position += animator.deltaPosition;
+				//transform.parent.rotation = animator.rootRotation;
+				//transform.parent.position += animator.deltaPosition;
 			}
 		}
 	}

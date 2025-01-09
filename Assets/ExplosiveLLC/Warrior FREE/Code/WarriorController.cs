@@ -26,6 +26,7 @@ namespace WarriorAnimsFREE
 		// Inputs.
 		[HideInInspector] public bool inputAttack;
 		[HideInInspector] public bool inputJump;
+		[HideInInspector] public bool takeExplodeDamage;
 		[HideInInspector] public float inputVertical = 0;
 		[HideInInspector] public float inputHorizontal = 0;
 
@@ -227,10 +228,10 @@ namespace WarriorAnimsFREE
 
 		}
 
-		private void CriticalDamage()
+		public void CriticalDamage()
 		{
             SetAnimatorInt("Jumping", 1);
-            SetAnimatorTrigger(AnimatorTrigger.DamageTrigger);
+            SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
 			Lock(true, true, true, 0, warriorTiming.TimingLock(warrior,"crit_damage"));
 		}
 
@@ -256,8 +257,8 @@ namespace WarriorAnimsFREE
 
         public void DamageLock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime)
         {
-            StopCoroutine("_DamageLock");
-            StartCoroutine(_DamageLock(lockMovement, lockAction, timed, delayTime, lockTime));
+            StopCoroutine("_CriticalDamageLock");
+            StartCoroutine(_CriticalDamageLock(lockMovement, lockAction, timed, delayTime, lockTime));
         }
 
         //Timed -1 = infinite, 0 = no, 1 = yes.
@@ -274,7 +275,7 @@ namespace WarriorAnimsFREE
 			}
 		}
 
-        public IEnumerator _DamageLock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime)
+        public IEnumerator _CriticalDamageLock(bool lockMovement, bool lockAction, bool timed, float delayTime, float lockTime)
         {
             if (delayTime > 0) { yield return new WaitForSeconds(delayTime); }
             if (lockMovement) { LockMove(true); }
@@ -283,7 +284,7 @@ namespace WarriorAnimsFREE
             {
                 if (lockTime > 0)
                 {
-                    yield return new WaitWhile(MaintainingGround);
+                    yield return new WaitWhile(isKnockback);
                     UnLock(lockMovement, lockAction);
                 }
             }

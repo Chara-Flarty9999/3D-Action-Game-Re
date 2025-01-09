@@ -1,22 +1,37 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace WarriorAnimsFREE
 {
 	public class GUIControls:MonoBehaviour
 	{
 		private WarriorController warriorController;
+		[SerializeField] UnityEvent criticalDamage;
 
 		private void Awake()
 		{
 			warriorController = GetComponent<WarriorController>();
 		}
 
-		private void OnGUI()
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+			{
+                warriorController.takeExplodeDamage = true;
+                criticalDamage.Invoke();
+
+            }
+        }
+
+        private void OnGUI()
 		{
 			if (warriorController.canAction) {
 				Attacking();
 				Jumping();
-			}
+				CriticalDamage();
+
+            }
 
 			Debug();
 		}
@@ -30,7 +45,7 @@ namespace WarriorAnimsFREE
 
 		private void CriticalDamage()
 		{
-			if (GUI.Button(new Rect(25, 135, 100, 30), "Critical")) { }
+			if (GUI.Button(new Rect(25, 135, 100, 30), "Critical")) { warriorController.CriticalDamage(); }
 		}
 
 		private void Jumping()

@@ -103,13 +103,21 @@ namespace WarriorAnimsFREE
 		// Run every frame we are in the idle state.
 		private void Idle_SuperUpdate()
 		{
+			if (warriorController.takeExplodeDamage) {
+				currentState = WarriorState.Explode_Damage;
+				return;
+			}
+			if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround()) {
+                currentState = WarriorState.ExplodeFall;
+                return;
+            }
 			// If Jump.
 			if (warriorController.canJump && warriorController.inputJump) {
 				currentState = WarriorState.Jump;
 				return;
 			}
 			// In air.
-			if (!warriorController.MaintainingGround()) {
+			if (!warriorController.takeExplodeDamage && !warriorController.MaintainingGround()) {
 				currentState = WarriorState.Fall;
 				return;
 			}
@@ -135,13 +143,23 @@ namespace WarriorAnimsFREE
 
 		private void Move_SuperUpdate()
 		{
-			// If Jump.
-			if (warriorController.canJump && warriorController.inputJump) {
+            if (warriorController.takeExplodeDamage)
+            {
+                currentState = WarriorState.Explode_Damage;
+                return;
+            }
+            if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
+            {
+                currentState = WarriorState.ExplodeFall;
+                return;
+            }
+            // If Jump.
+            if (warriorController.canJump && warriorController.inputJump) {
 				currentState = WarriorState.Jump;
 				return;
 			}
 			// Fallling.
-			if (!warriorController.MaintainingGround()) {
+			if (!warriorController.takeExplodeDamage && !warriorController.MaintainingGround()) {
 				currentState = WarriorState.Fall;
 				return;
 			}
@@ -172,7 +190,11 @@ namespace WarriorAnimsFREE
 			Vector3 verticalMoveDirection = currentVelocity - planarMoveDirection;
 
 			// Falling.
-			if (currentVelocity.y < 0) {
+			if (warriorController.takeExplodeDamage){
+                currentState = WarriorState.Explode_Damage;
+                return;
+            }
+			else if (currentVelocity.y < 0) {
 				currentVelocity = planarMoveDirection;
 				currentState = WarriorState.Fall;
 				return;
@@ -194,8 +216,13 @@ namespace WarriorAnimsFREE
 
 		private void Fall_SuperUpdate()
 		{
-			// Landing.
-			if (warriorController.AcquiringGround()) {
+            if (warriorController.takeExplodeDamage)
+            {
+                currentState = WarriorState.Explode_Damage;
+                return;
+            }
+            // Landing.
+            else if (warriorController.AcquiringGround()) {
 				currentVelocity = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
 				currentState = WarriorState.Idle;
 				return;
@@ -214,14 +241,75 @@ namespace WarriorAnimsFREE
 			if (warriorController.AcquiringGround()) { warriorController.Land(); }
 		}
 
-		#endregion
+        private void Explode_Damage_EnterState()
+        {
+            warriorController.SetAnimatorInt("Jumping", 1);
+            warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
+            warriorController.superCharacterController.DisableClamping();
+            warriorController.superCharacterController.DisableSlopeLimit();
+            currentVelocity += warriorController.superCharacterController.up * CalculateJumpSpeed(jumpHeight, gravity);
+            warriorController.LockJump(true);
+            warriorController.Jump();
+        }
 
-		/// <summary>
-		/// Rotate towards the direction the Warrior is moving.
-		/// </summary>
-		private void RotateTowardsMovementDir()
+        private void Explode_Damage_SuperUpdate()
+        {
+            Vector3 planarMoveDirection = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
+            Vector3 verticalMoveDirection = currentVelocity - planarMoveDirection;
+
+            // Falling.
+            if (currentVelocity.y < 0)
+            {
+                currentVelocity = planarMoveDirection;
+                currentState = WarriorState.ExplodeFall;
+                return;
+            }
+
+            planarMoveDirection = Vector3.MoveTowards(planarMoveDirection, warriorController.moveInput * inAirSpeed, jumpAcceleration * warriorController.superCharacterController.deltaTime);
+            verticalMoveDirection -= warriorController.superCharacterController.up * gravity * warriorController.superCharacterController.deltaTime;
+            currentVelocity = planarMoveDirection + verticalMoveDirection;
+        }
+
+        private void ExplodeFall_EnterState()
+        {
+            warriorController.superCharacterController.DisableClamping();
+            warriorController.superCharacterController.DisableSlopeLimit();
+            warriorController.LockJump(false);
+            warriorController.SetAnimatorInt("Jumping", 2);
+            warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
+        }
+
+        private void ExplodeFall_SuperUpdate()
+        {
+            // Landing.
+            if (warriorController.AcquiringGround())
+            {
+                currentVelocity = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
+                currentState = WarriorState.ExplodeLand;
+                return;
+            }
+
+            // Normal gravity.
+            currentVelocity -= warriorController.superCharacterController.up * gravity * warriorController.superCharacterController.deltaTime;
+        }
+
+        private void ExplodeFall_ExitState()
+        {
+            warriorController.SetAnimatorInt("Jumping", 0);
+            warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
+
+            // Landed.
+            if (warriorController.AcquiringGround()) { warriorController.Land(); }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Rotate towards the direction the Warrior is moving.
+        /// </summary>
+        private void RotateTowardsMovementDir()
 		{
-			if (warriorController.moveInput != Vector3.zero) {
+			if (warriorController.moveInput != Vector3.zero && !warriorController.takeExplodeDamage) {
 				transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(warriorController.moveInput), Time.deltaTime * rotationSpeed);
 			}
 		}
