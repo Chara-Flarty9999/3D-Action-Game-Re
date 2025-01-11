@@ -32,6 +32,7 @@
 		Explode_Damage = 4,
 		ExplodeFall = 5,
 		ExplodeLand = 6,
+		ExplodeWakeUp = 7,
 	}
 
 	/// <summary>

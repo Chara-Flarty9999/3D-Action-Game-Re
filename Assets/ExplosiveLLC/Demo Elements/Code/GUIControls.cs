@@ -16,7 +16,7 @@ namespace WarriorAnimsFREE
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.V))
 			{
                 warriorController.takeExplodeDamage = true;
                 criticalDamage.Invoke();

@@ -2,7 +2,7 @@
 
 namespace WarriorAnimsFREE
 {
-	public class WarriorMovementController:SuperStateMachine
+	public class WarriorMovementController : SuperStateMachine
 	{
 		[Header("Components")]
 		private WarriorController warriorController;
@@ -22,10 +22,12 @@ namespace WarriorAnimsFREE
 
 		[HideInInspector] public Vector3 lookDirection { get; private set; }
 
+		bool isKnockBack = false;
+
 		private void Start()
 		{
 			warriorController = GetComponent<WarriorController>();
-			
+
 			// Set currentState to idle on startup.
 			currentState = WarriorState.Idle;
 		}
@@ -104,13 +106,14 @@ namespace WarriorAnimsFREE
 		private void Idle_SuperUpdate()
 		{
 			if (warriorController.takeExplodeDamage) {
+				isKnockBack = true;
 				currentState = WarriorState.Explode_Damage;
 				return;
 			}
 			if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround()) {
-                currentState = WarriorState.ExplodeFall;
-                return;
-            }
+				currentState = WarriorState.ExplodeFall;
+				return;
+			}
 			// If Jump.
 			if (warriorController.canJump && warriorController.inputJump) {
 				currentState = WarriorState.Jump;
@@ -126,7 +129,7 @@ namespace WarriorAnimsFREE
 				return;
 			}
 			// Apply friction to slow to a halt.
-			currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.zero, groundFriction 
+			currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.zero, groundFriction
 				* warriorController.superCharacterController.deltaTime);
 		}
 
@@ -143,18 +146,18 @@ namespace WarriorAnimsFREE
 
 		private void Move_SuperUpdate()
 		{
-            if (warriorController.takeExplodeDamage)
-            {
-                currentState = WarriorState.Explode_Damage;
-                return;
-            }
-            if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
-            {
-                currentState = WarriorState.ExplodeFall;
-                return;
-            }
-            // If Jump.
-            if (warriorController.canJump && warriorController.inputJump) {
+			if (warriorController.takeExplodeDamage)
+			{
+				currentState = WarriorState.Explode_Damage;
+				return;
+			}
+			if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
+			{
+				currentState = WarriorState.ExplodeFall;
+				return;
+			}
+			// If Jump.
+			if (warriorController.canJump && warriorController.inputJump) {
 				currentState = WarriorState.Jump;
 				return;
 			}
@@ -165,8 +168,8 @@ namespace WarriorAnimsFREE
 			}
 			// Set speed determined by movement type.
 			if (warriorController.HasMoveInput() && warriorController.canMove) {
-				currentVelocity = Vector3.MoveTowards(currentVelocity, warriorController.moveInput 
-					* runSpeed, movementAcceleration 
+				currentVelocity = Vector3.MoveTowards(currentVelocity, warriorController.moveInput
+					* runSpeed, movementAcceleration
 					* warriorController.superCharacterController.deltaTime);
 			} else {
 				currentState = WarriorState.Idle;
@@ -190,10 +193,10 @@ namespace WarriorAnimsFREE
 			Vector3 verticalMoveDirection = currentVelocity - planarMoveDirection;
 
 			// Falling.
-			if (warriorController.takeExplodeDamage){
-                currentState = WarriorState.Explode_Damage;
-                return;
-            }
+			if (warriorController.takeExplodeDamage) {
+				currentState = WarriorState.Explode_Damage;
+				return;
+			}
 			else if (currentVelocity.y < 0) {
 				currentVelocity = planarMoveDirection;
 				currentState = WarriorState.Fall;
@@ -216,13 +219,13 @@ namespace WarriorAnimsFREE
 
 		private void Fall_SuperUpdate()
 		{
-            if (warriorController.takeExplodeDamage)
-            {
-                currentState = WarriorState.Explode_Damage;
-                return;
-            }
-            // Landing.
-            else if (warriorController.AcquiringGround()) {
+			if (warriorController.takeExplodeDamage)
+			{
+				currentState = WarriorState.Explode_Damage;
+				return;
+			}
+			// Landing.
+			else if (warriorController.AcquiringGround()) {
 				currentVelocity = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
 				currentState = WarriorState.Idle;
 				return;
@@ -241,77 +244,125 @@ namespace WarriorAnimsFREE
 			if (warriorController.AcquiringGround()) { warriorController.Land(); }
 		}
 
-        private void Explode_Damage_EnterState()
+		private void Explode_Damage_EnterState()
+		{
+			warriorController.SetAnimatorInt("Jumping", 1);
+			warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
+			warriorController.superCharacterController.DisableClamping();
+			warriorController.superCharacterController.DisableSlopeLimit();
+			currentVelocity += warriorController.superCharacterController.up * CalculateJumpSpeed(jumpHeight, gravity);
+			warriorController.LockJump(true);
+			warriorController.Jump();
+		}
+
+		private void Explode_Damage_SuperUpdate()
+		{
+			Vector3 planarMoveDirection = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
+			Vector3 verticalMoveDirection = currentVelocity - planarMoveDirection;
+
+			// Falling.
+			if (currentVelocity.y < 0)
+			{
+				currentVelocity = planarMoveDirection;
+				currentState = WarriorState.ExplodeFall;
+				return;
+			}
+
+			planarMoveDirection = Vector3.MoveTowards(planarMoveDirection, warriorController.moveInput * inAirSpeed, jumpAcceleration * warriorController.superCharacterController.deltaTime);
+			verticalMoveDirection -= warriorController.superCharacterController.up * gravity * warriorController.superCharacterController.deltaTime;
+			currentVelocity = planarMoveDirection + verticalMoveDirection;
+		}
+
+		private void ExplodeFall_EnterState()
+		{
+			warriorController.superCharacterController.DisableClamping();
+			warriorController.superCharacterController.DisableSlopeLimit();
+			warriorController.LockJump(false);
+			warriorController.SetAnimatorInt("Jumping", 2);
+			warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
+		}
+
+		private void ExplodeFall_SuperUpdate()
+		{
+			// Landing.
+			if (warriorController.AcquiringGround())
+			{
+				currentVelocity = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
+				currentState = WarriorState.ExplodeLand;
+				return;
+			}
+
+			// Normal gravity.
+			currentVelocity -= warriorController.superCharacterController.up * gravity * warriorController.superCharacterController.deltaTime;
+		}
+
+		private void ExplodeFall_ExitState()
+		{
+			currentVelocity = Vector3.zero;
+			warriorController.SetAnimatorInt("Jumping", 0);
+			warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
+
+			// Landed.
+			//if (warriorController.AcquiringGround()) { warriorController.Land(); }
+		}
+
+		private void ExplodeLand_EnterState()
+		{
+			warriorController.superCharacterController.DisableClamping();
+			warriorController.superCharacterController.DisableSlopeLimit();
+		}
+
+		private void ExplodeLand_SuperUpdate()
+		{
+			// Landing.
+			for (int i = 0; i < 500; i++)
+			{
+				if (i >= 450)
+				{
+					currentState = WarriorState.ExplodeWakeUp;
+					return;
+				}
+			}
+		}
+
+		private void ExplodeWakeUp_EnterState()
+		{
+			Debug.Log("途中までは処理したぞ");
+			warriorController.superCharacterController.DisableClamping();
+			warriorController.superCharacterController.DisableSlopeLimit();
+			warriorController.SetAnimatorInt("Jumping", 3);
+			warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
+		}
+
+        private void ExplodeWakeUp_SuperUpdate()
         {
-            warriorController.SetAnimatorInt("Jumping", 1);
-            warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
-            warriorController.superCharacterController.DisableClamping();
-            warriorController.superCharacterController.DisableSlopeLimit();
-            currentVelocity += warriorController.superCharacterController.up * CalculateJumpSpeed(jumpHeight, gravity);
-            warriorController.LockJump(true);
-            warriorController.Jump();
         }
 
-        private void Explode_Damage_SuperUpdate()
-        {
-            Vector3 planarMoveDirection = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
-            Vector3 verticalMoveDirection = currentVelocity - planarMoveDirection;
-
-            // Falling.
-            if (currentVelocity.y < 0)
-            {
-                currentVelocity = planarMoveDirection;
-                currentState = WarriorState.ExplodeFall;
-                return;
-            }
-
-            planarMoveDirection = Vector3.MoveTowards(planarMoveDirection, warriorController.moveInput * inAirSpeed, jumpAcceleration * warriorController.superCharacterController.deltaTime);
-            verticalMoveDirection -= warriorController.superCharacterController.up * gravity * warriorController.superCharacterController.deltaTime;
-            currentVelocity = planarMoveDirection + verticalMoveDirection;
-        }
-
-        private void ExplodeFall_EnterState()
-        {
-            warriorController.superCharacterController.DisableClamping();
-            warriorController.superCharacterController.DisableSlopeLimit();
+        private void ExplodeWakeUp_ExitState()
+		{
+			Debug.Log("最後まで処理したやで");
+			warriorController.SetAnimatorInt("Jumping", 0);
+			isKnockBack = false;
             warriorController.LockJump(false);
-            warriorController.SetAnimatorInt("Jumping", 2);
-            warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
-        }
-
-        private void ExplodeFall_SuperUpdate()
-        {
-            // Landing.
-            if (warriorController.AcquiringGround())
-            {
-                currentVelocity = Math3d.ProjectVectorOnPlane(warriorController.superCharacterController.up, currentVelocity);
-                currentState = WarriorState.ExplodeLand;
-                return;
-            }
-
-            // Normal gravity.
-            currentVelocity -= warriorController.superCharacterController.up * gravity * warriorController.superCharacterController.deltaTime;
-        }
-
-        private void ExplodeFall_ExitState()
-        {
-            warriorController.SetAnimatorInt("Jumping", 0);
-            warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
-
+            warriorController.takeExplodeDamage = false;
             // Landed.
-            if (warriorController.AcquiringGround()) { warriorController.Land(); }
-        }
+		}
 
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Rotate towards the direction the Warrior is moving.
-        /// </summary>
-        private void RotateTowardsMovementDir()
+		/// <summary>
+		/// Rotate towards the direction the Warrior is moving.
+		/// </summary>
+		private void RotateTowardsMovementDir()
 		{
 			if (warriorController.moveInput != Vector3.zero && !warriorController.takeExplodeDamage) {
 				transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(warriorController.moveInput), Time.deltaTime * rotationSpeed);
 			}
+		}
+
+		public bool EndKnockBack()
+		{
+			return isKnockBack;
 		}
 	}
 }
