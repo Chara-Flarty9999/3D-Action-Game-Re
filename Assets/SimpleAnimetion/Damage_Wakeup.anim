@@ -18708,7 +18708,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 1
   m_Events:
-  - time: 2.5
+  - time: 2.1666667
     functionName: ExplodeWakeUp_ExitState
     data: 
     objectReferenceParameter: {fileID: 0}

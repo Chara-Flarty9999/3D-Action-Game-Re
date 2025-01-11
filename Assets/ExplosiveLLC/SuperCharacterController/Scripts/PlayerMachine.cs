@@ -225,4 +225,12 @@ public class PlayerMachine : SuperStateMachine {
 
         moveDirection -= controller.up * Gravity * controller.deltaTime;
     }
+
+    void Explode_Damage_EnterState()
+    {
+        controller.DisableClamping();
+        controller.DisableSlopeLimit();
+
+        moveDirection += controller.up * CalculateJumpSpeed(JumpHeight, Gravity);
+    }
 }

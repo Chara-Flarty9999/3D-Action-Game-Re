@@ -232,7 +232,7 @@ namespace WarriorAnimsFREE
 		{
             SetAnimatorInt("Jumping", 1);
             SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
-            //DamageLock(true, true, true, 0, warriorTiming.TimingLock(warrior,"crit_damage"));
+            DamageLock(true, true, true, 0, warriorTiming.TimingLock(warrior,"crit_damage"));
 		}
 
 
@@ -280,20 +280,20 @@ namespace WarriorAnimsFREE
             if (delayTime > 0) { yield return new WaitForSeconds(delayTime); }
             if (lockMovement) { LockMove(true); }
             if (lockAction) { LockAction(true); }
-            yield return new WaitWhile(isKnockback = warriorMovementController.EndKnockBack);
-            UnLock(lockMovement, lockAction);
             if (timed)
             {
                 if (lockTime > 0)
                 {
-                    
+                    yield return new WaitForSeconds(lockTime);
+                    yield return new WaitWhile(() => warriorMovementController.EndKnockBack());
+                    UnLock(lockMovement, lockAction);
                 }
             }
         }
 
         private void FixedUpdate()
         {
-            Debug.Log(canMove + ", " +  canJump + ", " + canAction + ", " + takeExplodeDamage + ", " + useRootMotion);
+            Debug.Log(canMove + ", " +  canJump + ", " + canAction + ", " + takeExplodeDamage + ", " + inputJump);
         }
 
         /// <summary>

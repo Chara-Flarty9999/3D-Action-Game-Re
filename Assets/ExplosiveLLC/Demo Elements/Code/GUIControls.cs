@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -45,16 +46,16 @@ namespace WarriorAnimsFREE
 
 		private void CriticalDamage()
 		{
-			if (GUI.Button(new Rect(25, 135, 100, 30), "Critical")) { warriorController.CriticalDamage(); }
+			if (GUI.Button(new Rect(25, 135, 100, 30), "Critical")) { warriorController.takeExplodeDamage = true; warriorController.CriticalDamage(); }
 		}
 
 		private void Jumping()
 		{
 			if (warriorController.canJump
 				&& warriorController.canAction) {
-				if (warriorController.MaintainingGround()) {
-					if (GUI.Button(new Rect(25, 175, 100, 30), "Jump")) {
-						if (warriorController.canJump) { warriorController.inputJump = true; ; }
+                if (warriorController.MaintainingGround()) {
+                    if (GUI.Button(new Rect(25, 175, 100, 30), "Jump")) {
+						if (warriorController.canJump) { warriorController.inputJump = true; UnityEngine.Debug.Log("ジャンプは押したぞ"); ; }
 					}
 				}
 			}

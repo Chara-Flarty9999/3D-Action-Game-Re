@@ -48,6 +48,7 @@ namespace WarriorAnimsFREE
 			{
 				if(action == "attack1") timing = 1.2f;
 				if(action == "damage") timing = 0.3f;
+				if (action == "crit_damage") timing = 1.5f;
 			}
 			else if(warrior == Warrior.Spearman)
 			{
