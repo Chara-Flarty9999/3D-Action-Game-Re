@@ -23,6 +23,7 @@
 	/// <summary>
 	/// The different movement / situational states the Warrior can be in.
 	/// </summary>
+	
 	public enum WarriorState
 	{
 		Idle = 0,

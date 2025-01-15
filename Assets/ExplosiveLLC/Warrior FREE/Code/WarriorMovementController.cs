@@ -252,7 +252,8 @@ namespace WarriorAnimsFREE
 			warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
 			warriorController.superCharacterController.DisableClamping();
 			warriorController.superCharacterController.DisableSlopeLimit();
-			currentVelocity += warriorController.superCharacterController.up * CalculateJumpSpeed(jumpHeight, gravity);
+			currentVelocity = Vector3.zero;
+			currentVelocity += warriorController.superCharacterController.up  * CalculateJumpSpeed(jumpHeight, gravity) + warriorController.transform.forward * -1;
 			warriorController.LockJump(true);
 			warriorController.Jump();
 		}
@@ -270,7 +271,7 @@ namespace WarriorAnimsFREE
 				return;
 			}
 
-			planarMoveDirection = Vector3.MoveTowards(planarMoveDirection, warriorController.moveInput * inAirSpeed, jumpAcceleration * warriorController.superCharacterController.deltaTime);
+			planarMoveDirection = Vector3.MoveTowards(planarMoveDirection, warriorController.transform.forward * -1 * inAirSpeed, jumpAcceleration * warriorController.superCharacterController.deltaTime);
 			verticalMoveDirection -= warriorController.superCharacterController.up * gravity * warriorController.superCharacterController.deltaTime;
 			currentVelocity = planarMoveDirection + verticalMoveDirection;
 		}
