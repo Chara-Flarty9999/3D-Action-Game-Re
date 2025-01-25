@@ -387,7 +387,7 @@ namespace WarriorAnimsFREE
 
         private void Update()
         {
-            Debug.Log(currentState + ", " + currentVelocity);
+            //Debug.Log(currentState + ", " + currentVelocity);
         }
     }
 }
