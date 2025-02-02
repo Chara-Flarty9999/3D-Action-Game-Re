@@ -8,11 +8,13 @@ namespace WarriorAnimsFREE
 	public class GUIControls:MonoBehaviour
 	{
 		private WarriorController warriorController;
+		[SerializeField] GameManager gameManager;
 		[SerializeField] UnityEvent criticalDamage;
 
 		private void Awake()
 		{
 			warriorController = GetComponent<WarriorController>();
+
 		}
 
         private void Update()
