@@ -21,9 +21,7 @@ namespace WarriorAnimsFREE
         {
             if (Input.GetKeyDown(KeyCode.V))
 			{
-                warriorController.takeExplodeDamage = true;
                 criticalDamage.Invoke();
-
             }
         }
 

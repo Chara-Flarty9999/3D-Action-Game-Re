@@ -1,0 +1,42 @@
+using JetBrains.Annotations;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using WarriorAnimsFREE;
+
+public class Inside_Explode_DamageHit : MonoBehaviour
+{
+    public GameObject exploded_Object;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Enemy enemydata = collision.gameObject.GetComponent<Enemy>();
+            enemydata.DealDamage_Heal(-25);
+        }
+        if (collision.gameObject.tag == "Player")
+        {
+            WarriorController warriorController = collision.gameObject.GetComponent<WarriorController>();
+            GameObject gameManager = GameObject.Find("GameManager");
+            GameManager manager = gameManager.GetComponent<GameManager>();
+            manager.GetDamage_Heal(-25);
+            warriorController.CriticalDamage_looking(gameObject);
+            warriorController.CriticalDamage();
+        }
+
+        GetComponent<Collider>().enabled = false;
+    }
+}

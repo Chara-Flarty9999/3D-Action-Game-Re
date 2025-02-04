@@ -230,9 +230,18 @@ namespace WarriorAnimsFREE
 
 		public void CriticalDamage()
 		{
+			takeExplodeDamage = true;
             SetAnimatorInt("Jumping", 1);
             SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
             DamageLock(true, true, true, 0, warriorTiming.TimingLock(warrior,"crit_damage"));
+		}
+
+		public void CriticalDamage_looking(GameObject gameObject)
+		{
+			transform.LookAt(gameObject.transform.position);
+			float saveRotateY = transform.rotation.y;
+            float saveRotateW = transform.rotation.w;
+            transform.rotation = new Quaternion(0, saveRotateY, 0, saveRotateW);
 		}
 
 
