@@ -81,6 +81,11 @@ public class PenetrationBullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Enemy enemydata = collision.gameObject.GetComponent<Enemy>();
+            enemydata.DealDamage_Heal(-10);
+        }
     }
 
     public void OnDestroy()

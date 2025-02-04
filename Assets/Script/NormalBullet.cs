@@ -79,6 +79,11 @@ public class NormalBullet : MonoBehaviour
     {
         if(collision.gameObject.tag != "Player")
         {
+            if(collision.gameObject.tag == "Enemy")
+            {
+                Enemy enemydata = collision.gameObject.GetComponent<Enemy>();
+                enemydata.DealDamage_Heal(-20);
+            }
             Destroy(gameObject);
         }
     }
