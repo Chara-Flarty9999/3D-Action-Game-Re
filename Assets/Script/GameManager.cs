@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     /// <summary>爆発性能を持った攻撃。放物線を描く挙動で飛び、壁などにぶつかると爆発する。二種のダメージ判定がある。</summary>
     [SerializeField] GameObject explodeBullet; //炸裂弾
 
-    private BulletType bulletType;
+    [SerializeField] BulletType bulletType;
     private Image characterImage;
     private Image lifeImage;
 
@@ -52,24 +52,20 @@ public class GameManager : MonoBehaviour
 
     public void BulletShoot()
     {
-        if (bulletType == BulletType.Normal)
+        GameObject bullet = bulletType switch
         {
-            Instantiate(normalBullet, spawner.transform);
-        }
-        else if (bulletType == BulletType.Penetration)
-        {
-            Instantiate(penetrationBullet, spawner.transform);
-        }
-        else 
-        {
-            Instantiate(explodeBullet, spawner.transform);
-        }
+            BulletType.Normal => normalBullet,
+            BulletType.Penetration => penetrationBullet,
+            BulletType.Explode => explodeBullet,
+        };
+
+        Instantiate(bullet, new Vector3(spawner.transform.position.x, spawner.transform.position.y, spawner.transform.position.z), Quaternion.identity);
     }
 
     enum BulletType
     {
         Normal,
         Penetration,
-        explode
+        Explode
     }
 }

@@ -25,11 +25,13 @@ namespace WarriorAnimsFREE
         [HideInInspector] public Vector3 lookDirection { get; private set; }
 
 		bool isKnockBack = false;
+		[SerializeField] GameObject gameManager;
+		GameManager manager;
 
 		private void Start()
 		{
 			warriorController = GetComponent<WarriorController>();
-
+			manager = gameManager.GetComponent<GameManager>();
 			// Set currentState to idle on startup.
 			currentState = WarriorState.Idle;
 		}
@@ -73,11 +75,16 @@ namespace WarriorAnimsFREE
 			warriorController.SetAnimatorFloat("Velocity", transform.InverseTransformDirection(currentVelocity).z);
 		}
 
-		#endregion
+        public void BulletFire()
+        {
+			manager.BulletShoot();
+        }
 
-		#region Gravity / Jumping
+        #endregion
 
-		public void RotateGravity(Vector3 up)
+        #region Gravity / Jumping
+
+        public void RotateGravity(Vector3 up)
 		{
 			lookDirection = Quaternion.FromToRotation(transform.up, up) * lookDirection;
 		}

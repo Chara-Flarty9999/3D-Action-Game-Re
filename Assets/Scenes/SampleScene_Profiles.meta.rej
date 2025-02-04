@@ -1,0 +1,10 @@
+diff a/Assets/Scenes/SampleScene_Profiles.meta b/Assets/Scenes/SampleScene_Profiles.meta	(rejected hunks)
+@@ -0,0 +1,8 @@
++fileFormatVersion: 2
++guid: 535f58a1538a884478210cf921df66f0
++folderAsset: yes
++DefaultImporter:
++  externalObjects: {}
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 
