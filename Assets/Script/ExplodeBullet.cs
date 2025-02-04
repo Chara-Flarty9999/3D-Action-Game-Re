@@ -79,7 +79,8 @@ public class ExplodeBullet : MonoBehaviour
     }
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag != "Player")
+        string tagcheck = collision.gameObject.tag;
+        if (tagcheck != "Player" && tagcheck != "Outside_Explode" && tagcheck != "Inside_Explode")
         {
             Instantiate(explode_Effect, transform.position, Quaternion.identity);
             mesh.enabled = false;
