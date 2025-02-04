@@ -10,6 +10,7 @@ public class OutSide_Explode_DamageHit : MonoBehaviour
     void Start()
     {
         collider = GetComponent<Collider>();
+        Invoke("AutoColliderDisable", 0.5f);
     }
 
     // Update is called once per frame
@@ -36,6 +37,11 @@ public class OutSide_Explode_DamageHit : MonoBehaviour
             warriorController.CriticalDamage();
         }
 
+        collider.enabled = false;
+    }
+
+    void AutoColliderDisable()
+    {
         collider.enabled = false;
     }
 }

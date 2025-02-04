@@ -6,11 +6,13 @@ using WarriorAnimsFREE;
 
 public class Inside_Explode_DamageHit : MonoBehaviour
 {
+    Collider collider;
     public GameObject exploded_Object;
     // Start is called before the first frame update
     void Start()
     {
-        
+        collider = GetComponent<Collider>();
+        Invoke("AutoColliderDisable", 0.5f);
     }
 
     // Update is called once per frame
@@ -38,5 +40,9 @@ public class Inside_Explode_DamageHit : MonoBehaviour
         }
 
         GetComponent<Collider>().enabled = false;
+    }
+    void AutoColliderDisable()
+    {
+        collider.enabled = false;
     }
 }
