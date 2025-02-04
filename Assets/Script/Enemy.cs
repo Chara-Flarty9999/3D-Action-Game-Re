@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -10,18 +11,24 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _enemyLife = 20;
     Rigidbody rb;
     MeshRenderer mesh;
+    SpriteRenderer spriteRenderer;
+    GameObject playerCamera;
+    Camera cam;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        cam = playerCamera.GetComponent<Camera>();
         rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Vector3 screenPos = cam.WorldToScreenPoint(gameObject.transform.position);
+        GameObject EnemyLifeGage = transform.GetChild(1).gameObject;
+        EnemyLifeGage.transform.position = screenPos;
     }
 
     public void DealDamage_Heal(int change_HP)
