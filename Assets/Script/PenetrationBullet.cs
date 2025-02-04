@@ -61,7 +61,7 @@ public class PenetrationBullet : MonoBehaviour
         rigidbody = this.GetComponent<Rigidbody>();
 
         transform.rotation = Quaternion.Euler(0, 0, _rote);
-        audioSource.PlayOneShot(fly);
+        AudioSource.PlayClipAtPoint(fly, transform.position);
         rigidbody.AddForce(warriorController.transform.forward * 70, ForceMode.Impulse);
 
         Destroy(gameObject, 3);

@@ -66,7 +66,7 @@ public class ExplodeBullet : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(0, 0, _rote);
         audioSource.PlayOneShot(fly);
-        rigidbody.AddForce((warriorController.transform.forward / 5 + warriorController.transform.up) * 10, ForceMode.Impulse);
+        rigidbody.AddForce((warriorController.transform.forward / 30 + warriorController.transform.up / 15) * 150, ForceMode.Impulse);
     }
 
 
