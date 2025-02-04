@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -38,7 +39,17 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.LeftShift)) 
+        {
+            if(bulletType == BulletType.Explode)
+            {
+                bulletType = BulletType.Normal;
+            }
+            else
+            {
+                bulletType++;
+            }
+        }
     }
 
     public void GetDamage_Heal(int change_HP) 
