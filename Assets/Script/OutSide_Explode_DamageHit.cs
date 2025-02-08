@@ -37,7 +37,6 @@ public class OutSide_Explode_DamageHit : MonoBehaviour
             warriorController.CriticalDamage();
         }
 
-        collider.enabled = false;
     }
 
     void AutoColliderDisable()

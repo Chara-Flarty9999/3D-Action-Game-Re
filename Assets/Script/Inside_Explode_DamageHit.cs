@@ -38,8 +38,6 @@ public class Inside_Explode_DamageHit : MonoBehaviour
             warriorController.CriticalDamage_looking(gameObject);
             warriorController.CriticalDamage();
         }
-
-        GetComponent<Collider>().enabled = false;
     }
     void AutoColliderDisable()
     {
