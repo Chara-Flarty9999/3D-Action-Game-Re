@@ -254,6 +254,7 @@ namespace WarriorAnimsFREE
 
 		private void Explode_Damage_EnterState()
 		{
+			
 			isKnockBack = true;
 			warriorController.SetAnimatorInt("Jumping", 1);
 			warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
@@ -287,7 +288,6 @@ namespace WarriorAnimsFREE
 		{
 			warriorController.superCharacterController.DisableClamping();
 			warriorController.superCharacterController.DisableSlopeLimit();
-			warriorController.LockJump(false);
 			warriorController.SetAnimatorInt("Jumping", 2);
 			warriorController.SetAnimatorTrigger(AnimatorTrigger.CriticalDamageTrigger);
 		}
@@ -319,8 +319,9 @@ namespace WarriorAnimsFREE
 
 		private void ExplodeLand_EnterState()
 		{
-            warriorController.superCharacterController.EnableSlopeLimit();
-            warriorController.superCharacterController.EnableClamping();
+            warriorController.superCharacterController.DisableClamping();
+            warriorController.superCharacterController.DisableSlopeLimit();
+			warriorController.LockAction(true);
         }
 
 		private void ExplodeLand_SuperUpdate()
@@ -363,6 +364,7 @@ namespace WarriorAnimsFREE
 			warriorController.SetAnimatorInt("Jumping", 0);
 			isKnockBack = false;
             warriorController.LockJump(false);
+            warriorController.LockAction(false);
             warriorController.takeExplodeDamage = false;
 			warriorController.SetAnimatorInt("Action", 1);
 

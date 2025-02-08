@@ -172,7 +172,7 @@ namespace WarriorAnimsFREE
 			GetInput();
 
 			// Character is on ground.
-			if (MaintainingGround() && canAction) { Attacking(); }
+			if (MaintainingGround() && canAction && !takeExplodeDamage) { Attacking(); }
 
 			UpdateAnimationSpeed();
 		}
