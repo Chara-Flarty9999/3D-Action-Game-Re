@@ -364,7 +364,6 @@ namespace WarriorAnimsFREE
 			warriorController.SetAnimatorInt("Jumping", 0);
 			isKnockBack = false;
             warriorController.LockJump(false);
-            warriorController.LockAction(false);
             warriorController.takeExplodeDamage = false;
 			warriorController.SetAnimatorInt("Action", 1);
 
