@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float MaxHP = 10;
     [SerializeField] GameObject lifeGage;
     [SerializeField] GameObject charaImg;
-    [SerializeField] GameObject spawner;
+    [SerializeField] GameObject spawner; 
+    [SerializeField] GameObject BulletTypeUI;
 
     //下三つにそれぞれ使うオブジェクトを入れてくれ
     /// <summary>シンプルな攻撃。貫通性能はなく、与ダメが高い。</summary>
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] BulletType bulletType;
     private Image characterImage;
     private Image lifeImage;
+    private Image BulletTypeImage;
 
     UnityEvent _getDamage;
 
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
         HP = MaxHP;
         lifeImage = lifeGage.GetComponent<Image>();
         characterImage = charaImg.GetComponent<Image>();
+        BulletTypeImage = BulletTypeUI.GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -49,6 +52,18 @@ public class GameManager : MonoBehaviour
             {
                 bulletType++;
             }
+        }
+        switch (bulletType)
+        {
+            case BulletType.Normal:
+                BulletTypeImage.color = new Color(1,1,1,1);
+                break;
+            case BulletType.Penetration:
+                BulletTypeImage.color = new Color(0.2f,0.4f,1,1);
+                break;
+            case BulletType.Explode:
+                BulletTypeImage.color = new Color(1,0.4f,0.2f,1);
+                break;
         }
     }
 
