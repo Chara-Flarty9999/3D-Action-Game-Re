@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 3628.5527, g: 3679.0918, b: 4941.7734, a: 1}
+  m_IndirectSpecularColor: {r: 1976.6775, g: 1907.9434, b: 1876.842, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13774,7 +13774,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &980335126
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19408,7 +19408,7 @@ MonoBehaviour:
   leftEnemyTextObject: {fileID: 398795448}
   getTimeTextObject: {fileID: 4186213}
   clearTextObject: {fileID: 980335125}
-  Button: {fileID: 0}
+  Button: {fileID: 1177999568}
   typeChangeSound: {fileID: 8300000, guid: 73f112a6e42ebef429efe592ad615f41, type: 3}
   normalBullet: {fileID: 2434757811123135317, guid: 9a715453d332f63468feea26f9b764b7, type: 3}
   penetrationBullet: {fileID: 2741857423398979953, guid: 6ee1904d2c4b3ba45a6c05fbe522b8c2, type: 3}
@@ -26310,6 +26310,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 841fda1a8336ebd45a80491910c22305, type: 3}
+--- !u!1 &1882957659 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5104709333709654086, guid: 841fda1a8336ebd45a80491910c22305, type: 3}
+  m_PrefabInstance: {fileID: 1882957658}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1882957660
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882957659}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8.98, y: 6.5000277, z: 10.37}
+  m_Center: {x: 0.04, y: 2.2500005, z: 0.1}
 --- !u!1 &1893553664
 GameObject:
   m_ObjectHideFlags: 0
