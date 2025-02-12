@@ -114,31 +114,39 @@ namespace WarriorAnimsFREE
 		// Run every frame we are in the idle state.
 		private void Idle_SuperUpdate()
 		{
-			if (warriorController.takeExplodeDamage) {
-				currentState = WarriorState.Explode_Damage;
-				return;
-			}
-			if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround()) {
-				currentState = WarriorState.ExplodeFall;
-				return;
-			}
-			// If Jump.
-			if (warriorController.canJump && warriorController.inputJump) {
-				currentState = WarriorState.Jump;
-				return;
-			}
-			// In air.
-			if (!warriorController.takeExplodeDamage && !warriorController.MaintainingGround()) {
-				currentState = WarriorState.Fall;
-				return;
-			}
-			if (warriorController.HasMoveInput() && warriorController.canMove) {
-				currentState = WarriorState.Move;
-				return;
-			}
-			// Apply friction to slow to a halt.
-			currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.zero, groundFriction
-				* warriorController.superCharacterController.deltaTime);
+			if (!GameManager.cleared)
+			{
+                if (warriorController.takeExplodeDamage)
+                {
+                    currentState = WarriorState.Explode_Damage;
+                    return;
+                }
+                if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
+                {
+                    currentState = WarriorState.ExplodeFall;
+                    return;
+                }
+                // If Jump.
+                if (warriorController.canJump && warriorController.inputJump)
+                {
+                    currentState = WarriorState.Jump;
+                    return;
+                }
+                // In air.
+                if (!warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
+                {
+                    currentState = WarriorState.Fall;
+                    return;
+                }
+                if (warriorController.HasMoveInput() && warriorController.canMove)
+                {
+                    currentState = WarriorState.Move;
+                    return;
+                }
+                // Apply friction to slow to a halt.
+                currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.zero, groundFriction
+                    * warriorController.superCharacterController.deltaTime);
+            }
 		}
 
 		// Run once when exit the idle state.
@@ -154,34 +162,42 @@ namespace WarriorAnimsFREE
 
 		private void Move_SuperUpdate()
 		{
-			if (warriorController.takeExplodeDamage)
+			if (!GameManager.cleared)
 			{
-				currentState = WarriorState.Explode_Damage;
-				return;
-			}
-			if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
-			{
-				currentState = WarriorState.ExplodeFall;
-				return;
-			}
-			// If Jump.
-			if (warriorController.canJump && warriorController.inputJump) {
-				currentState = WarriorState.Jump;
-				return;
-			}
-			// Fallling.
-			if (!warriorController.takeExplodeDamage && !warriorController.MaintainingGround()) {
-				currentState = WarriorState.Fall;
-				return;
-			}
-			// Set speed determined by movement type.
-			if (warriorController.HasMoveInput() && warriorController.canMove) {
-				currentVelocity = Vector3.MoveTowards(currentVelocity, warriorController.moveInput
-					* runSpeed, movementAcceleration
-					* warriorController.superCharacterController.deltaTime);
-			} else {
-				currentState = WarriorState.Idle;
-			}
+                if (warriorController.takeExplodeDamage)
+                {
+                    currentState = WarriorState.Explode_Damage;
+                    return;
+                }
+                if (warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
+                {
+                    currentState = WarriorState.ExplodeFall;
+                    return;
+                }
+                // If Jump.
+                if (warriorController.canJump && warriorController.inputJump)
+                {
+                    currentState = WarriorState.Jump;
+                    return;
+                }
+                // Fallling.
+                if (!warriorController.takeExplodeDamage && !warriorController.MaintainingGround())
+                {
+                    currentState = WarriorState.Fall;
+                    return;
+                }
+                // Set speed determined by movement type.
+                if (warriorController.HasMoveInput() && warriorController.canMove)
+                {
+                    currentVelocity = Vector3.MoveTowards(currentVelocity, warriorController.moveInput
+                        * runSpeed, movementAcceleration
+                        * warriorController.superCharacterController.deltaTime);
+                }
+                else
+                {
+                    currentState = WarriorState.Idle;
+                }
+            }
 		}
 
 		private void Jump_EnterState()

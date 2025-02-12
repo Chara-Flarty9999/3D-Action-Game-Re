@@ -20,8 +20,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject bulletTypeUI;
     [SerializeField] GameObject leftEnemyTextObject;
     [SerializeField] GameObject getTimeTextObject;
+    [SerializeField] GameObject clearTextObject;
+    [SerializeField] GameObject Button;
     TextMeshProUGUI leftEnemyBoxText;
     TextMeshProUGUI timeText;
+    TextMeshProUGUI clearText;
 
 
 
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviour
     private Image BulletTypeImage;
     float time = 0;
     float clearTime = 0;
+    public static bool cleared = false;
 
     UnityEvent _getDamage;
 
@@ -54,6 +58,7 @@ public class GameManager : MonoBehaviour
         HP = MaxHP;
         leftEnemyBoxText =leftEnemyTextObject.GetComponent<TextMeshProUGUI>();
         timeText = getTimeTextObject.GetComponent<TextMeshProUGUI>();
+        clearText = clearTextObject.GetComponent<TextMeshProUGUI>();
         lifeImage = lifeGage.GetComponent<Image>();
         characterImage = charaImg.GetComponent<Image>();
         BulletTypeImage = bulletTypeUI.GetComponent<Image>();
@@ -90,13 +95,22 @@ public class GameManager : MonoBehaviour
                 BulletTypeImage.color = new Color(1,0.4f,0.2f,1);
                 break;
         }
-        time += Time.deltaTime;
+        if (!cleared)
+        {
+            time += Time.deltaTime;
+        }
         leftEnemyBoxText.SetText(leftEnemyBox.ToString() + " / " + maxEnemyBox.ToString());
         timeText.SetText("TIME : {0}",Mathf.Round(time * 100.0f)/100);
 
         if (leftEnemyBox <= 0)
         {
+            cleared = true;
+            GameObject.Find("BGM").GetComponent<AudioSource>().Pause();
             clearTime = time;
+            clearText.SetText("Clear!\ntime:" + clearTime);
+            clearTextObject.SetActive(true);
+            Button.SetActive(true);
+            StartCoroutine("BackToTitle");
         }
     }
 
@@ -138,6 +152,16 @@ public class GameManager : MonoBehaviour
             _blackfade.color += new Color32(0, 0, 0, 5);
             yield return new WaitForSeconds(0.05f);
         }
+    }
+    IEnumerator BackToTitle()
+    {
+        yield return new WaitForSeconds(5f);
+        for (int i = 0; i < 51; i++)
+        {
+            _blackfade.color += new Color32(0, 0, 0, 5);
+            yield return new WaitForSeconds(0.05f);
+        }
+        SceneManager.LoadScene("Title");
     }
     enum BulletType
     {

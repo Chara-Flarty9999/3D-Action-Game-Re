@@ -214,7 +214,10 @@ namespace WarriorAnimsFREE
 		/// </summary>
 		private void Attacking()
 		{
-			if (inputAttack) { Attack1(); }
+			if (!GameManager.cleared)
+			{
+                if (inputAttack) { Attack1(); }
+            }
 		}
 
 		/// <summary>
