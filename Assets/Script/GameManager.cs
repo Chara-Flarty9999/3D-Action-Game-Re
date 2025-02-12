@@ -40,12 +40,15 @@ public class GameManager : MonoBehaviour
     private Image characterImage;
     private Image lifeImage;
     private Image BulletTypeImage;
+    float time = 0;
+    float clearTime = 0;
 
     UnityEvent _getDamage;
 
     // Start is called before the first frame update
     void Start()
     {
+        time += Time.deltaTime;
         maxEnemyBox = GameObject.FindGameObjectsWithTag("Enemy").Length;
         leftEnemyBox = maxEnemyBox;
         HP = MaxHP;
@@ -87,10 +90,14 @@ public class GameManager : MonoBehaviour
                 BulletTypeImage.color = new Color(1,0.4f,0.2f,1);
                 break;
         }
-        Debug.Log(leftEnemyBoxText + ", " + leftEnemyBox);
+        time += Time.deltaTime;
         leftEnemyBoxText.SetText(leftEnemyBox.ToString() + " / " + maxEnemyBox.ToString());
-        timeText.SetText("TIME : {0}",Mathf.Round(Time.time * 100.0f)/100);
+        timeText.SetText("TIME : {0}",Mathf.Round(time * 100.0f)/100);
 
+        if (leftEnemyBox <= 0)
+        {
+            clearTime = time;
+        }
     }
 
     public void GetDamage_Heal(int change_HP) 

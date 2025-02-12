@@ -16,6 +16,7 @@ public class Title_Manager : MonoBehaviour
     //Transform _titleX;
     Image _blackfade;
     [SerializeField] AudioClip _startSe;
+    [SerializeField] GameObject introduce;
     AudioSource _titleBGM;
     AudioSource _audiosource;
     GameObject selectButton;
@@ -74,6 +75,10 @@ public class Title_Manager : MonoBehaviour
 
     IEnumerator FadeOut()
     {
+        introduce.SetActive(true);
+        yield return new WaitForSeconds(8f);
+        _audiosource.PlayOneShot(_startSe);
+        introduce.SetActive(false);
         for (int i = 0; i < 51; i++)
         {
             _blackfade.color += new Color32(0, 0, 0, 5);
