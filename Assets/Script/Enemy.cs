@@ -56,4 +56,9 @@ public class Enemy : MonoBehaviour
             //mesh.material.DOColor(new Color(1, 1, 1), 0.8f);
         }
     }
+
+    private void OnDestroy()
+    {
+        GameManager.leftEnemyBox--;
+    }
 }

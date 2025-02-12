@@ -23,6 +23,7 @@ public class Title_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         GameObject BGM = GameObject.Find("Title BGM");
         GameObject blackFade = GameObject.Find("BlackFade");
         selectButton = GameObject.Find("StartButton");
@@ -65,6 +66,7 @@ public class Title_Manager : MonoBehaviour
                 _audiosource.PlayOneShot(_startSe);
                 StartCoroutine("FadeOut");
                 _enableControl = false;
+                selectButton.SetActive(false);
             }
 
         }
@@ -79,7 +81,7 @@ public class Title_Manager : MonoBehaviour
         }
         for( int i = 0;i <= 10 ; i++)
         {
-            _titleBGM.volume -= 0.05f;
+            _titleBGM.volume -= 0.1f;
             yield return new WaitForSeconds(0.05f);
         }
         yield return new WaitForSeconds(1f);

@@ -1,20 +1,33 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     private float HP {get; set;}
+    int maxEnemyBox = 0;
+    public static int leftEnemyBox = 0;
     [SerializeField] private float MaxHP = 10;
     [SerializeField] GameObject lifeGage;
     [SerializeField] GameObject charaImg;
     [SerializeField] GameObject spawner; 
-    [SerializeField] GameObject BulletTypeUI;
+    [SerializeField] GameObject bulletTypeUI;
+    [SerializeField] GameObject leftEnemyTextObject;
+    [SerializeField] GameObject getTimeTextObject;
+    TextMeshProUGUI leftEnemyBoxText;
+    TextMeshProUGUI timeText;
 
+
+
+    Image _blackfade;
+    [SerializeField] AudioClip typeChangeSound;
+    AudioSource audioSource;
     //下三つにそれぞれ使うオブジェクトを入れてくれ
     /// <summary>シンプルな攻撃。貫通性能はなく、与ダメが高い。</summary>
     [SerializeField] GameObject normalBullet; //通常弾
@@ -33,10 +46,18 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        maxEnemyBox = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        leftEnemyBox = maxEnemyBox;
         HP = MaxHP;
+        leftEnemyBoxText =leftEnemyTextObject.GetComponent<TextMeshProUGUI>();
+        timeText = getTimeTextObject.GetComponent<TextMeshProUGUI>();
         lifeImage = lifeGage.GetComponent<Image>();
         characterImage = charaImg.GetComponent<Image>();
-        BulletTypeImage = BulletTypeUI.GetComponent<Image>();
+        BulletTypeImage = bulletTypeUI.GetComponent<Image>();
+        audioSource = GetComponent<AudioSource>();
+        GameObject blackFade = GameObject.Find("BlackFade");
+        _blackfade = blackFade.GetComponent<Image>();
+        StartCoroutine("FadeIn");
     }
 
     // Update is called once per frame
@@ -44,6 +65,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftShift)) 
         {
+            audioSource.PlayOneShot(typeChangeSound);
             if(bulletType == BulletType.Explode)
             {
                 bulletType = BulletType.Normal;
@@ -65,6 +87,10 @@ public class GameManager : MonoBehaviour
                 BulletTypeImage.color = new Color(1,0.4f,0.2f,1);
                 break;
         }
+        Debug.Log(leftEnemyBoxText + ", " + leftEnemyBox);
+        leftEnemyBoxText.SetText(leftEnemyBox.ToString() + " / " + maxEnemyBox.ToString());
+        timeText.SetText("TIME : {0}",Mathf.Round(Time.time * 100.0f)/100);
+
     }
 
     public void GetDamage_Heal(int change_HP) 
@@ -88,6 +114,24 @@ public class GameManager : MonoBehaviour
         Instantiate(bullet, new Vector3(spawner.transform.position.x, spawner.transform.position.y, spawner.transform.position.z), Quaternion.identity);
     }
 
+    IEnumerator FadeIn()
+    {
+        _blackfade.color = new Color32(0, 0, 0, 255);
+        for (int i = 0; i < 51; i++)
+        {
+            _blackfade.color -= new Color32(0, 0, 0, 5);
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    IEnumerator FadeOut()
+    {
+        for (int i = 0; i < 51; i++)
+        {
+            _blackfade.color += new Color32(0, 0, 0, 5);
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
     enum BulletType
     {
         Normal,
