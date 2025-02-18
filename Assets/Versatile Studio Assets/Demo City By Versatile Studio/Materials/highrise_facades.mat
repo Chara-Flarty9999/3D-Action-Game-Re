@@ -24,10 +24,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: highrise_facades
-  m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
+  m_Shader: {fileID: 4800000, guid: 756bac9090102564582875f4c7e30202, type: 3}
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
   - _NORMALMAP_TANGENT_SPACE
+  - _TESSELLATION_PHONG
   m_InvalidKeywords: []
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -644,7 +645,7 @@ Material:
     - _MatCapVRParallaxStrength: 1
     - _MatCapZRotCancel: 1
     - _MaterialID: 1
-    - _Metallic: 0.235
+    - _Metallic: 1
     - _MetallicRemapMax: 0.235
     - _MetallicRemapMin: 0
     - _Mode: 0
@@ -757,7 +758,7 @@ Material:
     - _ShadowStrength: 1
     - _ShadowStrengthMaskLOD: 0
     - _ShiftBackfaceUV: 0
-    - _Smoothness: 0.704
+    - _Smoothness: 0.65
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SmoothnessTextureChannel: 0
@@ -794,6 +795,13 @@ Material:
     - _TessFactorMax: 3
     - _TessShrink: 0
     - _TessStrength: 0.5
+    - _TessellationBackFaceCullEpsilon: -0.193
+    - _TessellationFactor: 21
+    - _TessellationFactorMaxDistance: 50
+    - _TessellationFactorMinDistance: 20
+    - _TessellationFactorTriangleSize: 100
+    - _TessellationMode: 1
+    - _TessellationShapeFactor: 0.75
     - _TexWorldScale: 1
     - _TexWorldScaleEmissive: 1
     - _Thickness: 1
