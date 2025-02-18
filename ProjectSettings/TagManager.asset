@@ -8,6 +8,10 @@ TagManager:
   - CinemachineTarget
   - PostVolume
   - Enemy
+  - PlayerBullet
+  - Outside_Explode
+  - Inside_Explode
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX
