@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 2186.5063, g: 2081.2583, b: 2024.1416, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19262,6 +19262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1435393009}
+  - component: {fileID: 1435393010}
   m_Layer: 0
   m_Name: EnemyTurret
   m_TagString: Untagged
@@ -19287,6 +19288,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 121
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1435393010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435393008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 710a0b89b4b6de04a816122ad0523499, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  throwingObject: {fileID: 2741857423398979953, guid: 9eacb0fbbff5f894fbf98a19c06c6bc7, type: 3}
+  targetObject: {fileID: 0}
+  throwingAngle: 0.306
+  _maxEenemyLife: 60
+  _enemyType: 1
 --- !u!1 &1445934721
 GameObject:
   m_ObjectHideFlags: 0

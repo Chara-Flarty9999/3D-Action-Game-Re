@@ -24,8 +24,8 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 射出角度
     /// </summary>
-    [SerializeField, Range(0F, 90F), Tooltip("射出する角度(Turretのみ)")]
-    private float ThrowingAngle;
+    [SerializeField, Range(0F, 1F), Tooltip("射出する角度(Turretのみ)")]
+    private float throwingAngle;
 
     GameObject _turretBase;
 
@@ -46,7 +46,11 @@ public class Enemy : MonoBehaviour
     {
         _enemyLife = _maxEenemyLife;
         enemyLifeGage = transform.Find("Canvas/EnemyLifeGageRoot/EnemyLifeGage").gameObject;
-        _turretBase = transform.Find("TurretBase").gameObject;
+        if (_enemyType == EnemyType.Turret)
+        {
+            targetObject = GameObject.Find("Sana.Airsky_Sorceress");
+            _turretBase = transform.Find("TurretBase").gameObject;
+        }
         enemyCanvas = transform.GetChild(0).gameObject;
         gage_image = enemyLifeGage.GetComponent<Image>();
         rb = GetComponent<Rigidbody>();
@@ -59,9 +63,10 @@ public class Enemy : MonoBehaviour
         switch (_enemyType)
         {
             case EnemyType.Turret:
-                Vector3 playerPos = targetObject.transform.position;
-                playerPos.y = transform.position.y;
-                _turretBase.transform.LookAt(playerPos);
+                _turretBase.transform.LookAt(targetObject.transform.position);
+                float saveRotateY = _turretBase.transform.rotation.y;
+                float saveRotateW = _turretBase.transform.rotation.w;
+                _turretBase.transform.rotation = new Quaternion(throwingAngle, saveRotateY, 0, saveRotateW);
                 break;
         }
     }
@@ -101,7 +106,7 @@ public class Enemy : MonoBehaviour
             Vector3 targetPosition = targetObject.transform.position;
 
             // 射出角度
-            float angle = ThrowingAngle;
+            float angle = throwingAngle;
 
             // 射出速度を算出
             Vector3 velocity = CalculateVelocity(this.transform.position, targetPosition, angle);
