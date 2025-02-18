@@ -61,7 +61,7 @@ namespace WarriorAnimsFREE
 
         private void Awake()
 		{
-
+			GameManager.cleared = false;
             // Get SuperCharacterController.
             superCharacterController = GetComponent<SuperCharacterController>();
 
