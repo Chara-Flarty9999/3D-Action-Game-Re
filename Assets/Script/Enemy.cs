@@ -28,6 +28,8 @@ public class Enemy : MonoBehaviour
     private float throwingAngle;
 
     GameObject _turretBase;
+    GameObject _turretBarrel;
+    float projectileSpeed = 10f;
 
     [Header("共通設定")]
     [SerializeField] float _maxEenemyLife = 20;
@@ -50,6 +52,7 @@ public class Enemy : MonoBehaviour
         {
             targetObject = GameObject.Find("Sana.Airsky_Sorceress");
             _turretBase = transform.Find("TurretBase").gameObject;
+            _turretBarrel = transform.Find("TurretBase/TurretBarrelBase").gameObject;
         }
         enemyCanvas = transform.GetChild(0).gameObject;
         gage_image = enemyLifeGage.GetComponent<Image>();
@@ -63,10 +66,26 @@ public class Enemy : MonoBehaviour
         switch (_enemyType)
         {
             case EnemyType.Turret:
-                _turretBase.transform.LookAt(targetObject.transform.position);
+                Vector3 dirToTarget = targetObject.transform.position - _turretBase.transform.position;
+                Vector3 flatDir = new Vector3(dirToTarget.x, 0f, dirToTarget.z);
+                _turretBase.transform.rotation = Quaternion.LookRotation(flatDir);
+
+                Vector3 firingDirection;
+
+                if (TryCalculateBallisticVelocity(_turretBarrel.transform.position, targetObject.transform.position, projectileSpeed, out firingDirection))
+                {
+                    // barrelのforwardをfiringDirectionに近づける（X軸のみ変化）
+                    Quaternion aimRotation = Quaternion.LookRotation(firingDirection);
+                    Vector3 euler = aimRotation.eulerAngles;
+
+                    // 回転制限: X軸だけ、YとZを固定
+                    _turretBarrel.transform.localEulerAngles = new Vector3(euler.x*-1, 0, 0);
+                }
+
+                /*_turretBase.transform.LookAt(targetObject.transform.position);
                 float saveRotateY = _turretBase.transform.rotation.y;
                 float saveRotateW = _turretBase.transform.rotation.w;
-                _turretBase.transform.rotation = new Quaternion(throwingAngle, saveRotateY, 0, saveRotateW);
+                _turretBase.transform.rotation = new Quaternion(throwingAngle, saveRotateY, 0, saveRotateW);*/
                 break;
         }
     }
@@ -74,6 +93,34 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         
+    }
+    bool TryCalculateBallisticVelocity(Vector3 origin, Vector3 target, float speed, out Vector3 velocity)
+    {
+        Vector3 toTarget = target - origin;
+        Vector3 toTargetXZ = new Vector3(toTarget.x, 0, toTarget.z);
+        float y = toTarget.y;
+        float xz = toTargetXZ.magnitude;
+
+        float g = Physics.gravity.y;
+
+        float v2 = speed * speed;
+        float underSqrt = v2 * v2 - g * (g * xz * xz + 2 * y * v2);
+
+        if (underSqrt < 0)
+        {
+            velocity = Vector3.zero;
+            return false; // 到達不能
+        }
+
+        float sqrt = Mathf.Sqrt(underSqrt);
+        float lowAngle = Mathf.Atan2(v2 - sqrt, g * xz); // 低い弾道
+        float angle = lowAngle;
+
+        // direction (XZ plane)
+        Vector3 dir = toTargetXZ.normalized;
+
+        velocity = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.Cross(dir, Vector3.up)) * dir * speed;
+        return true;
     }
 
     public void DealDamage_Heal(int change_HP)

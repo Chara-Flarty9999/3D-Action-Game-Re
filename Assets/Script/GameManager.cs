@@ -135,6 +135,18 @@ public class GameManager : MonoBehaviour
         Instantiate(bullet, new Vector3(spawner.transform.position.x, spawner.transform.position.y, spawner.transform.position.z), Quaternion.identity);
     }
 
+    public void EnemyBulletShoot(GameObject muzzle, BulletType chooseBulletType)
+    {
+        GameObject bullet = chooseBulletType switch
+        {
+            BulletType.Normal => normalBullet,
+            BulletType.Penetration => penetrationBullet,
+            BulletType.Explode => explodeBullet,
+        };
+
+        Instantiate(bullet, new Vector3(muzzle.transform.position.x, muzzle.transform.position.y, muzzle.transform.position.z), Quaternion.identity);
+    }
+
     IEnumerator FadeIn()
     {
         _blackfade.color = new Color32(0, 0, 0, 255);
@@ -163,7 +175,7 @@ public class GameManager : MonoBehaviour
         }
         SceneManager.LoadScene("Title");
     }
-    enum BulletType
+    public enum BulletType
     {
         Normal,
         Penetration,
