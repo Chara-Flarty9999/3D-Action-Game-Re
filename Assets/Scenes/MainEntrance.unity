@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 3454.6982, g: 3384.4375, b: 4001.6602, a: 1}
+  m_IndirectSpecularColor: {r: 1750.2072, g: 1734.1545, b: 1734.1545, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8874,7 +8874,7 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.28
-  m_Height: 1.95
+  m_Height: 1.52
   m_Direction: 1
   m_Center: {x: 0, y: 1.57, z: 0}
 --- !u!1 &601480499
@@ -19303,6 +19303,8 @@ MonoBehaviour:
   throwingObject: {fileID: 2741857423398979953, guid: 9eacb0fbbff5f894fbf98a19c06c6bc7, type: 3}
   targetObject: {fileID: 825033745}
   throwingAngle: 0.306
+  turretMuzzle: {fileID: 177386924}
+  turretBulletRate: 10
   _maxEenemyLife: 60
   _enemyType: 1
 --- !u!1 &1445934721

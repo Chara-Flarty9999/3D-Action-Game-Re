@@ -27,9 +27,22 @@ public class Enemy : MonoBehaviour
     [SerializeField, Range(0F, 1F), Tooltip("射出する角度(Turretのみ)")]
     private float throwingAngle;
 
+    /// <summary>
+    /// 射出する座標のオブジェクト
+    /// </summary>
+    [SerializeField, Tooltip("射出する座標(Turretのみ)")]
+    private Transform turretMuzzle;
+
+    /// <summary>
+    /// 射出する座標のオブジェクト
+    /// </summary>
+    [SerializeField, Tooltip("弾を発射する間隔")]
+    private int turretBulletRate;
+
+    int _turretRateTime = 0;
     GameObject _turretBase;
     GameObject _turretBarrel;
-    float projectileSpeed = 10f;
+    float projectileSpeed = 20f;
 
     [Header("共通設定")]
     [SerializeField] float _maxEenemyLife = 20;
@@ -72,7 +85,8 @@ public class Enemy : MonoBehaviour
 
                 Vector3 firingDirection;
 
-                if (TryCalculateBallisticVelocity(_turretBarrel.transform.position, targetObject.transform.position, projectileSpeed, out firingDirection))
+                //TryCalculateBallisticVelocity
+                if (TryGetVelocity(_turretBarrel.transform.position, targetObject.transform.position, projectileSpeed, out firingDirection))
                 {
                     // barrelのforwardをfiringDirectionに近づける（X軸のみ変化）
                     Quaternion aimRotation = Quaternion.LookRotation(firingDirection);
@@ -80,7 +94,19 @@ public class Enemy : MonoBehaviour
 
                     // 回転制限: X軸だけ、YとZを固定
                     _turretBarrel.transform.localEulerAngles = new Vector3(euler.x*-1, 0, 0);
+
+                    _turretRateTime++;
+                    if (_turretRateTime == 1)
+                    {
+                        ThrowingBall();
+                    }
+
+                    if (_turretRateTime > turretBulletRate * 100)
+                    {
+                        _turretRateTime = 0;
+                    }
                 }
+
 
                 /*_turretBase.transform.LookAt(targetObject.transform.position);
                 float saveRotateY = _turretBase.transform.rotation.y;
@@ -94,8 +120,18 @@ public class Enemy : MonoBehaviour
     {
         
     }
-    bool TryCalculateBallisticVelocity(Vector3 origin, Vector3 target, float speed, out Vector3 velocity)
+    /// <summary>
+    /// 自身から対象への距離を測定し、一定の速度で弾が対象に届く向きベクトルを検索する。
+    /// </summary>
+    /// <param name="origin">射出する場所</param>
+    /// <param name="target">設定された標的</param>
+    /// <param name="speed">射出速度</param>
+    /// <param name="velocity">設定された射出速度で弾が対象に届くような向きベクトル</param>
+    /// <returns>対象に届くか否かをBool型で返す。ついでにベクトルを出力する。</returns>
+    bool TryGetVelocity(Vector3 origin, Vector3 target, float speed, out Vector3 velocity)
     {
+        
+        
         Vector3 toTarget = target - origin;
         Vector3 toTargetXZ = new Vector3(toTarget.x, 0, toTarget.z);
         float y = toTarget.y;
@@ -147,7 +183,7 @@ public class Enemy : MonoBehaviour
         if (throwingObject != null && targetObject != null && _enemyType == EnemyType.Turret)
         {
             // Ballオブジェクトの生成
-            GameObject ball = Instantiate(throwingObject, this.transform.position, Quaternion.identity);
+            GameObject ball = Instantiate(throwingObject, turretMuzzle.position, Quaternion.identity);
 
             // 標的の座標
             Vector3 targetPosition = targetObject.transform.position;
@@ -210,7 +246,9 @@ public class Enemy : MonoBehaviour
     {
         GameManager.leftEnemyBox--;
     }
-
+    /// <summary>
+    /// 敵の状態(敵種類)
+    /// </summary>
     enum EnemyType
     {
         Object,

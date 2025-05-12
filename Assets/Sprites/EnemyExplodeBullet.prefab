@@ -131,12 +131,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e28e1564364a3384c9e7fd3dd2b746f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hit: {fileID: 0}
-  fly: {fileID: 0}
-  explode: {fileID: 0}
+  hit: {fileID: 8300000, guid: 20d80e05fa6409c4094d0ba6e88e8a8a, type: 3}
+  fly: {fileID: 8300000, guid: b6bfc9bdb8d99b9458edf8ea38ae75b1, type: 3}
+  explode: {fileID: 8300000, guid: 353077ad4fcbb334e92c900073179889, type: 3}
   m_play: 1
-  spawnFromEnemy: {fileID: 0}
-  explode_Effect: {fileID: 0}
+  player: {fileID: 0}
+  explode_Effect: {fileID: 6150904384903690191, guid: e20c386d6502b964399d8c5c9ae1ada0, type: 3}
 --- !u!122 &2741857423398979954
 Halo:
   m_ObjectHideFlags: 0

@@ -42,27 +42,17 @@ public class EnemyExplodeBullet : MonoBehaviour
     [SerializeField] GameObject explode_Effect;
     GameObject[] delete_exploEffect;
 
-
-    /// <summary>
-    /// ベクトルから角度を取得する。
-    /// </summary>
-    /// <param name="angle"></param>
-    /// <returns></returns>
-    public static Vector2 AngleToVector2(float angle)
-    {
-        var radian = angle * (Mathf.PI / 180);
-        return new Vector2(Mathf.Cos(radian), Mathf.Sin(radian)).normalized;
-    }
-
     // Start is called before the first frame update
-    void Start()
+    public void Setup(Vector3 velocity)
     {
         audioSource = GetComponent<AudioSource>();
         mesh = GetComponent<MeshRenderer>();
         rigidbody = this.GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
 
-        transform.rotation = Quaternion.Euler(0, 0, _rote);
+        //transform.rotation = Quaternion.Euler(0, 0, _rote);
+        transform.rotation = Quaternion.LookRotation(velocity);
+        rigidbody.velocity = velocity;
         audioSource.PlayOneShot(fly);
         //rigidbody.AddForce((player.transform.forward / 30 + player.transform.up / 15) * 150, ForceMode.Impulse);
     }
@@ -78,7 +68,7 @@ public class EnemyExplodeBullet : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         string tagcheck = collision.gameObject.tag;
-        if (tagcheck != "Player" && tagcheck != "Outside_Explode" && tagcheck != "Inside_Explode")
+        if (tagcheck != "Enemy" && tagcheck != "Outside_Explode" && tagcheck != "Inside_Explode")
         {
             Instantiate(explode_Effect, transform.position, Quaternion.identity);
             mesh.enabled = false;
