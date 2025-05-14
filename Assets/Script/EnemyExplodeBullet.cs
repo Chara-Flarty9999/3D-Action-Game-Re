@@ -47,12 +47,8 @@ public class EnemyExplodeBullet : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         mesh = GetComponent<MeshRenderer>();
-        rigidbody = this.GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
-
-        //transform.rotation = Quaternion.Euler(0, 0, _rote);
-        transform.rotation = Quaternion.LookRotation(velocity);
-        rigidbody.velocity = velocity;
         audioSource.PlayOneShot(fly);
         //rigidbody.AddForce((player.transform.forward / 30 + player.transform.up / 15) * 150, ForceMode.Impulse);
     }
@@ -71,7 +67,6 @@ public class EnemyExplodeBullet : MonoBehaviour
         if (tagcheck != "Enemy" && tagcheck != "Outside_Explode" && tagcheck != "Inside_Explode")
         {
             Instantiate(explode_Effect, transform.position, Quaternion.identity);
-            mesh.enabled = false;
             rigidbody.velocity = Vector3.zero;
             rigidbody.useGravity = false;
             collider.enabled = false;
