@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
     [SerializeField, Tooltip("弾を発射する間隔")]
     private int turretBulletRate;
 
-    int _turretRateTime = 0;
+    float _turretRateTime = 0;
     GameObject _turretBase;
     GameObject _turretBarrel;
     Vector3 _enemyBulletDirection;
@@ -60,7 +60,8 @@ public class Enemy : MonoBehaviour
     {
         _enemyLife = _maxEenemyLife;
         enemyLifeGage = transform.Find("Canvas/EnemyLifeGageRoot/EnemyLifeGage").gameObject;
-        if (_enemyType == EnemyType.Turret)
+        
+        if (_enemyType == EnemyType.Turret) // タレット状態の時のみ取得する。
         {
             targetObject = GameObject.Find("Sana.Airsky_Sorceress");
             _turretBase = transform.Find("TurretBase").gameObject;
@@ -89,19 +90,20 @@ public class Enemy : MonoBehaviour
                 {
                     // barrelのforwardをfiringDirectionに近づける（X軸のみ変化）
                     Quaternion aimRotation = Quaternion.LookRotation(firingDirection);
+                    //Debug.DrawRay(_turretBase.transform.position, firingDirection * 10f, Color.red, 2f);
                     Vector3 euler = aimRotation.eulerAngles;
                     _enemyBulletDirection = firingDirection;
-
+                    //DrawTrajectory(_turretBarrel.transform.position, firingDirection);
                     // 回転制限: X軸だけ、YとZを固定
-                    _turretBarrel.transform.localEulerAngles = new Vector3(euler.x, 180, 0);
+                    _turretBarrel.transform.rotation = Quaternion.LookRotation(firingDirection);
 
-                    _turretRateTime++;
-                    if (_turretRateTime == 1)
+                    if (_turretRateTime == 0)
                     {
-                        ThrowingBall(euler.x);
+                        ThrowingBall(firingDirection);
                     }
+                    _turretRateTime += Time.deltaTime;
 
-                    if (_turretRateTime > turretBulletRate * 100)
+                    if (_turretRateTime > turretBulletRate)
                     {
                         _turretRateTime = 0;
                     }
@@ -122,8 +124,9 @@ public class Enemy : MonoBehaviour
     }
     /// <summary>
     /// 自身から対象への距離を測定し、一定の速度で弾が対象に届く向きベクトルを検索する。
+    /// 平たく言うと斜方投射の改造。
     /// </summary>
-    /// <param name="origin">射出する場所</param>
+    /// <param name="origin">射出場所</param>
     /// <param name="target">設定された標的</param>
     /// <param name="speed">射出速度</param>
     /// <param name="velocity">設定された射出速度で弾が対象に届くような向きベクトル</param>
@@ -136,6 +139,7 @@ public class Enemy : MonoBehaviour
         Vector3 toTargetXZ = new Vector3(toTarget.x, 0, toTarget.z);
         float y = toTarget.y;
         float xz = toTargetXZ.magnitude;
+        //ここまでで自分からターゲットまでの距離を測る。
 
         float g = Physics.gravity.y;
 
@@ -155,7 +159,12 @@ public class Enemy : MonoBehaviour
         // direction (XZ plane)
         Vector3 dir = toTargetXZ.normalized;
 
-        velocity = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.Cross(dir, Vector3.up)) * dir * speed;
+        Debug.DrawRay(origin, dir, Color.yellow, 2f);
+
+        velocity = dir * -1 * speed * Mathf.Cos(angle) + Vector3.up * speed * Mathf.Sin(angle);
+
+        Debug.DrawRay(origin, velocity, Color.cyan, 2f);
+        //velocity = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.Cross(dir, Vector3.up)) * dir * speed;
         return true;
     }
 
@@ -178,7 +187,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// ボールを射出する
     /// </summary>
-    private void ThrowingBall(float throwingAngle)
+    private void ThrowingBall(Vector3 shootVector)
     {
         if (throwingObject != null && targetObject != null && _enemyType == EnemyType.Turret)
         {
@@ -187,11 +196,11 @@ public class Enemy : MonoBehaviour
 
             // 射出
             Rigidbody rid = ball.GetComponent<Rigidbody>();
-            rid.velocity = _enemyBulletDirection;
+            rid.velocity = shootVector;
         }
         else
         {
-            if (_enemyType == EnemyType.Turret)
+            if (_enemyType != EnemyType.Turret)
             {
                 throw new System.Exception("タレットではないため発射できません。");
             }
@@ -215,4 +224,31 @@ public class Enemy : MonoBehaviour
         Wander,
         chase
     }
+
+
+
+
+    #region Ballistic/Liner
+
+    [Header("弾道表示")]
+    [SerializeField] private LineRenderer _lineRenderer;
+    [SerializeField] private int _resolution = 30; // 点の数
+    [SerializeField] private float _timeStep = 0.1f; // 何秒刻みで点を打つか
+
+    void DrawTrajectory(Vector3 startPos, Vector3 startVelocity)
+    {
+        List<Vector3> points = new List<Vector3>();
+
+        for (int i = 0; i < _resolution; i++)
+        {
+            float t = i * _timeStep;
+            Vector3 point = startPos + startVelocity * t + 0.5f * Physics.gravity * t * t;
+            points.Add(point);
+        }
+
+        _lineRenderer.positionCount = points.Count;
+        _lineRenderer.SetPositions(points.ToArray());
+    }
+
+    #endregion
 }

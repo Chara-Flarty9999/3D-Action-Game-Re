@@ -306,7 +306,7 @@ namespace WarriorAnimsFREE
 
         private void FixedUpdate()
         {
-            Debug.Log(canMove + ", " +  canJump + ", " + canAction + ", " + takeExplodeDamage + ", " + inputJump);
+            //Debug.Log(canMove + ", " +  canJump + ", " + canAction + ", " + takeExplodeDamage + ", " + inputJump);
         }
 
         /// <summary>

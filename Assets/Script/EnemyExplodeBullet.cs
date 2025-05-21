@@ -43,7 +43,7 @@ public class EnemyExplodeBullet : MonoBehaviour
     GameObject[] delete_exploEffect;
 
     // Start is called before the first frame update
-    public void Setup(Vector3 velocity)
+    public void Start()
     {
         audioSource = GetComponent<AudioSource>();
         mesh = GetComponent<MeshRenderer>();
