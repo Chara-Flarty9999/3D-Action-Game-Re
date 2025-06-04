@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 3454.6982, g: 3384.4375, b: 4001.6602, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19467,7 +19467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throwingObject: {fileID: 2741857423398979953, guid: 9eacb0fbbff5f894fbf98a19c06c6bc7, type: 3}
   targetObject: {fileID: 825033745}
-  projectileSpeed: 10
+  projectileSpeed: 15
   turretMuzzle: {fileID: 177386924}
   turretBulletRate: 5
   _maxEenemyLife: 60
@@ -29454,7 +29454,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1862606623
 RectTransform:
   m_ObjectHideFlags: 0
